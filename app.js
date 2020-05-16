@@ -10,6 +10,9 @@ const ejs = require("ejs");
 const app = express();
 var items = ["Buy Food", "Cook Food", "Eat Food"];
 
+// where to get our static resources from
+app.use(express.static("public"));
+
 // Used to parse JSON bodies
 app.use(express.json());
 

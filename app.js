@@ -7,9 +7,10 @@ const express = require("express");
 // const bodyParser = require("body-parser");
 const https = require("https");
 const ejs = require("ejs");
+const date = require(__dirname+"/date.js");
 const app = express();
-var items = ["Buy Food", "Cook Food", "Eat Food"];
-var workItems = [];
+const items = ["Buy Food", "Cook Food", "Eat Food"];
+const workItems = [];
 
 // where to get our static resources from
 app.use(express.static("public"));
@@ -27,16 +28,9 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 
 app.get("/", function (req, res) {
-  var today = new Date();
-  let options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  const date = today.toLocaleDateString("en-US", options);
+  const day = date.getDate(); 
 
-  res.render("list", { listTitle: date, newListItems: items });
+  res.render("list", { listTitle: day, newListItems: items });
 });
 
 app.post("/", function (req, res) {

@@ -8,6 +8,7 @@ const express = require("express");
 const https = require("https");
 const ejs = require("ejs");
 const app = express();
+var items = ["Buy Food", "Cook Food", "Eat Food"];
 
 // Used to parse JSON bodies
 app.use(express.json());
@@ -23,19 +24,25 @@ app.set("view engine", "ejs");
 
 app.get("/", function (req, res) {
   var today = new Date();
-  const currentDay = today.getDay();
-  var days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  var day = days[currentDay];
+  let options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const date = today.toLocaleDateString("en-US", options);
 
-  res.render("list", { kindOfDay: day });
+  res.render("list", { kindOfDay: date, newListItems: items });
+});
+
+app.post("/", function (req, res) {
+  let item = req.body.newItem;
+
+  items.push(item);
+
+  // console.log("Got Item: " + item);
+
+  res.redirect("/");
 });
 
 app.listen(port, function () {

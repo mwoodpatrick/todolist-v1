@@ -9,6 +9,7 @@ const https = require("https");
 const ejs = require("ejs");
 const app = express();
 var items = ["Buy Food", "Cook Food", "Eat Food"];
+var workItems = [];
 
 // where to get our static resources from
 app.use(express.static("public"));
@@ -35,17 +36,29 @@ app.get("/", function (req, res) {
   };
   const date = today.toLocaleDateString("en-US", options);
 
-  res.render("list", { kindOfDay: date, newListItems: items });
+  res.render("list", { listTitle: date, newListItems: items });
 });
 
 app.post("/", function (req, res) {
   let item = req.body.newItem;
 
-  items.push(item);
+  if ( req.body.list === "Work") {
+    workItems.push(item);
+    res.redirect("/work");
+  }
+  else {
+    items.push(item);
+    res.redirect("/");
+  }
 
-  // console.log("Got Item: " + item);
+});
 
-  res.redirect("/");
+app.get("/work", function (req, res) {
+  res.render("list", { listTitle: "Work List", newListItems: workItems });
+});
+
+app.get("/about", function (req, res) {
+  res.render("about");
 });
 
 app.listen(port, function () {
